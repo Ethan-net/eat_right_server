@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
-const { type } = require("node:os");
 
 const adminSchema = new mongoose.Schema(
   {
-    fullName: { type: String, require: true, min: 5 },
+    name: { type: String, require: true, min: 5 },
     email: { type: String, require: true },
-    adminID: { type: String, require: true },
+    adminID: { type: String },
     password: { type: String, require: true },
+    role: { type: String, default: "admin" },
   },
   {
     timestamps: true,
