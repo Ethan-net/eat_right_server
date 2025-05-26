@@ -18,14 +18,14 @@ authRoute.post("/signIn", adminSignIn);
 postItemRoute.post(
   "/post_item",
   uploads.single("image"),
-  mongoSanitizer(),
+  // mongoSanitizer(),
   verifyAdmin,
   postingItems
 );
 addTomenuList.post(
   "/add_tomenu",
   uploads.single("image"),
-  mongoSanitizer(),
+  // mongoSanitizer(),
   verifyAdmin,
   addingTomenuList
 );

@@ -3,9 +3,9 @@ const joi = require("joi");
 const postMenuItemValidation = joi.object({
   name: joi.string().required(),
   description: joi.string().required().min(10).max(50),
-  available: joi.boolean().optional(),
+  available: joi.string().optional(),
   price: joi.number().required().positive(),
-  image: joi.string().uri().required(),
+  image: joi.string().uri().optional(),
 });
 
 module.exports = postMenuItemValidation;

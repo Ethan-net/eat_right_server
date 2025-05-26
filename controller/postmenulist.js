@@ -1,17 +1,20 @@
 const addtoMenu = require("../models/addToMenu.schema");
 const postItemValidationSchema = require("../Validation/PostMenuList.Validation");
 
-const addingTomenuList = async (req, rres) => {
+const addingTomenuList = async (req, res) => {
   const { error, value } = postItemValidationSchema.validate(req.body);
   if (error) {
     return res.status(400).json({
       message: "error Processing request",
+      error: error.message,
     });
   }
   const ImageFile = req.file?.path;
 
   try {
-    const verifyMenuItem = await addtoMenu.findOne({ name: value.name });
+    const verifyMenuItem = await addtoMenu.findOne({
+      itemName: value.name,
+    });
     if (verifyMenuItem) {
       return res.status(400).json({
         message: " Item already on the List",

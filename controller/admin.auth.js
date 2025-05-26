@@ -1,24 +1,30 @@
 const adminSchema = require("../models/admin.schema");
 const bcrypt = require("bcrypt");
+const adminValidation = require("../Validation/admin.validation");
+
 const generateCookieToken = require("../utils/generateToken");
 
 const adminSignUp = async (req, res) => {
-  const { name, email, adminID, password } = req.body;
+  const { error, value } = adminValidation.validate(req.body);
+  // const { name, email, password } = req.body;
 
+  if (error) {
+    return res.send("Error Processing request");
+  }
   try {
-    const verifyAdmin = await adminSchema.findOne({ email });
+    const verifyAdmin = await adminSchema.findOne({ email: value.email });
     if (verifyAdmin) {
       return res.status(400).json({
         message: "Admin exist, try Logging in",
       });
     }
 
-    const uniquePassword = await bcrypt.hash(password, 10);
-    const admin_Id = "ER-" + name.split("").slice(0, 2).join("") + 2025;
+    const uniquePassword = await bcrypt.hash(value.password, 10);
+    const admin_Id = "ER-" + value.name.split("").slice(0, 3).join("") + 2025;
 
     const admin = new adminSchema({
-      name,
-      email,
+      name: value.name,
+      email: value.email,
       adminID: admin_Id,
       password: uniquePassword,
     });
@@ -26,10 +32,12 @@ const adminSignUp = async (req, res) => {
 
     res.status(200).json({
       message: "Sign Up Successfully",
+      userId: `Your user ID is ${admin_Id}`,
     });
   } catch (error) {
-    res.status(402).json({
+    res.status(400).json({
       message: " Problem creaating Admin Account, Try again Later",
+      error: error.message,
     });
   }
 };

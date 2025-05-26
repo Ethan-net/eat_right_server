@@ -2,40 +2,44 @@ const postItem = require("../models/postItem.Schema");
 const postItemValidationSchema = require("../Validation/postItem.validate");
 
 const postingItems = async (req, res) => {
-  const { error, value } = postItemValidationSchema.validate(req.body);
+  console.log("BODY:", req.body);
+  console.log("FILE:", req.file);
 
+  const ImageFile = req.file?.path;
+
+  const { error, value } = postItemValidationSchema.validate(req.body);
   if (error) {
     return res.status(400).json({
-      message: error.message,
+      message: "Error processing request",
+      error: error.message,
     });
   }
 
-  // const { name, description, price, orderNow } = req.body;
-  const ImageFile = req.file?.path;
-
   try {
-    const verifyItem = await postItem.findOne({ name: value.name });
+    const verifyItem = await postItem.findOne({ name: value.itemName });
     if (verifyItem) {
-      return res.status(500).json({
-        message: "Item already Exist",
+      return res.status(400).json({
+        message: "Item already exist",
       });
     }
-    const item = new postItem({
-      name: value.name,
+
+    const addedItem = new postItem({
+      itemName: value.itemName,
       description: value.description,
       price: value.price,
-      orderNow: value.orderNow,
       image: ImageFile,
+      available: value.available,
     });
 
-    await item.save();
+    await addedItem.save();
+
     res.status(200).json({
-      message: "You have Successfully Posted a New Item",
-      item,
+      message: "Item added Successfully",
+      addedItem,
     });
   } catch (error) {
     res.status(400).json({
-      message: "Error Post Item",
+      message: "Error adding Item",
       error: error.message,
     });
   }
