@@ -7,13 +7,16 @@ const uploads = require("../multer/multer.config");
 const postingItems = require("../controller/postItem");
 const verifyAdmin = require("../middleware/verifyAdmin");
 const addingTomenuList = require("../controller/postmenulist");
+const postAds = require("../controller/postAd");
 
 const authRoute = express.Router();
 const postItemRoute = express.Router();
 const addTomenuList = express.Router();
+const postAdvertRoute = express.Router();
 
 authRoute.post("/signUp", adminSignUp);
 authRoute.post("/signIn", adminSignIn);
+postAdvertRoute.post("/post_ad", uploads.single("image"), verifyAdmin, postAds);
 
 postItemRoute.post(
   "/post_item",
@@ -30,4 +33,4 @@ addTomenuList.post(
   addingTomenuList
 );
 
-module.exports = { authRoute, postItemRoute, addTomenuList };
+module.exports = { authRoute, postItemRoute, addTomenuList, postAdvertRoute };
