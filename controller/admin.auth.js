@@ -71,4 +71,14 @@ const adminSignIn = async (req, res) => {
   }
 };
 
-module.exports = { adminSignUp, adminSignIn };
+const logout = async (req, res) => {
+  res.clearCookie("myToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+  });
+
+  res.send("Logged out");
+};
+
+module.exports = { adminSignUp, adminSignIn, logout };
