@@ -14,6 +14,7 @@ const {
   addingTomenuList,
   deletePostItem,
   getMenuItem,
+  updateMenuItem,
 } = require("../controller/postmenulist");
 const postAds = require("../controller/postAd");
 const makeReservation = require("../controller/reservation");
@@ -31,22 +32,26 @@ authRoute.post("/logout", logout);
 makeReservationRoute.post("/make_reserve", makeReservation);
 postAdvertRoute.post("/post_ad", uploads.single("image"), verifyAdmin, postAds);
 
+// MENU
+
 addTomenuList.delete("/deletemenu/:id", verifyAdmin, deletePostItem);
 addTomenuList.get("/getitems", getMenuItem);
-
-postItemRoute.post(
-  "/post_item",
-  uploads.single("image"),
-  // mongoSanitizer(),
-  verifyAdmin,
-  postingItems
-);
+addTomenuList.put("/update-item/:id", updateMenuItem);
 addTomenuList.post(
   "/add_tomenu",
   uploads.single("image"),
   // mongoSanitizer(),
   verifyAdmin,
   addingTomenuList
+);
+
+// POST ITEM FOR ORDER
+postItemRoute.post(
+  "/post_item",
+  uploads.single("image"),
+  // mongoSanitizer(),
+  verifyAdmin,
+  postingItems
 );
 
 module.exports = {

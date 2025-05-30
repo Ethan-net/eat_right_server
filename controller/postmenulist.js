@@ -78,4 +78,44 @@ const getMenuItem = async (req, res) => {
   }
 };
 
-module.exports = { addingTomenuList, deletePostItem, getMenuItem };
+const updateMenuItem = async (req, res) => {
+  const { error, value } = postItemValidationSchema.validate(req.body);
+
+  if (error) {
+    res.send("Error processing request");
+  }
+  const updateImage = req.file?.path;
+  try {
+    const updatemenu = addtoMenu.findByIdAndUpdate(
+      req.param.id,
+      {
+        name: value.name,
+        description: value.descriptio,
+        price: value.price,
+        available: value.available,
+        ...(updateImage && { image: updateImage }),
+      },
+
+      { new: true }
+    );
+    if (!udatedmenu) {
+      return res.status(400).json({
+        message: "Unable to Update",
+      });
+    }
+    res.status(201).json({
+      message: "Updated successfully",
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: "invalid request",
+    });
+  }
+};
+
+module.exports = {
+  addingTomenuList,
+  deletePostItem,
+  getMenuItem,
+  updateMenuItem,
+};
