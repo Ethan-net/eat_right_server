@@ -73,42 +73,46 @@ const getMenuItem = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       message: "Error Processing request",
-      error: errorS,
+      error: error,
     });
   }
 };
 
 const updateMenuItem = async (req, res) => {
-  const { error, value } = postItemValidationSchema.validate(req.body);
+  // const { error, value } = postItemValidationSchema.validate(req.body);
 
-  if (error) {
-    res.send("Error processing request");
-  }
+  const { name, description, price, available } = req.body;
+
+  // if (error) {
+  //   res.send("Error processing request");
+  // }
   const updateImage = req.file?.path;
   try {
-    const updatemenu = addtoMenu.findByIdAndUpdate(
-      req.param.id,
+    const updatemenu = await addtoMenu.findByIdAndUpdate(
+      req.params.id,
       {
-        name: value.name,
-        description: value.descriptio,
-        price: value.price,
-        available: value.available,
+        name,
+        description,
+        price,
+        available,
         ...(updateImage && { image: updateImage }),
       },
 
       { new: true }
     );
-    if (!udatedmenu) {
+    if (!updatemenu) {
       return res.status(400).json({
-        message: "Unable to Update",
+        message: "Item unavailable",
+        data: updatemenu,
       });
     }
-    res.status(201).json({
+    res.status(200).json({
       message: "Updated successfully",
     });
   } catch (error) {
     res.status(400).json({
       message: "invalid request",
+      error: error.message,
     });
   }
 };

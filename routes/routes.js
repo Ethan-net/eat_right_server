@@ -36,7 +36,12 @@ postAdvertRoute.post("/post_ad", uploads.single("image"), verifyAdmin, postAds);
 
 addTomenuList.delete("/deletemenu/:id", verifyAdmin, deletePostItem);
 addTomenuList.get("/getitems", getMenuItem);
-addTomenuList.put("/update-item/:id", updateMenuItem);
+addTomenuList.patch(
+  "/update-item/:id",
+  uploads.single("image"),
+  verifyAdmin,
+  updateMenuItem
+);
 addTomenuList.post(
   "/add_tomenu",
   uploads.single("image"),

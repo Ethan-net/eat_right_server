@@ -3,6 +3,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 const cookiePaser = require("cookie-parser");
 const databaseconnect = require("./database/database.config");
+const bodyParser = require("body-parser");
 
 const {
   authRoute,
@@ -28,6 +29,7 @@ app.use(
 
 app.use(cookiePaser());
 app.use(helmet());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/app", authRoute);
 app.use("/app", postItemRoute);
